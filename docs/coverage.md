@@ -38,12 +38,12 @@ No effect in sim (weather, switching, doubles, field or out-of-battle abilities)
 
 | | count |
 |---|---|
-| Simulated | 88 |
-| No battle effect in the sim (marked "— không tác dụng" in the picker) | 9 |
+| Simulated | 89 |
+| No battle effect in the sim (marked "— không tác dụng" in the picker) | 8 |
 
-Simulated: Leftovers, Black Sludge, Shell Bell, Focus Sash, Focus Band, Eviolite, Assault Vest, Rocky Helmet, Sitrus Berry, Oran Berry, Lum Berry, Figy Berry, Wiki Berry, Mago Berry, Aguav Berry, Iapapa Berry, Liechi Berry, Ganlon Berry, Salac Berry, Petaya Berry, Apicot Berry, Starf Berry, Occa Berry, Passho Berry, Wacan Berry, Rindo Berry, Yache Berry, Chople Berry, Kebia Berry, Shuca Berry, Coba Berry, Payapa Berry, Tanga Berry, Charti Berry, Kasib Berry, Haban Berry, Colbur Berry, Babiri Berry, Chilan Berry, Roseli Berry, Choice Band, Choice Specs, Choice Scarf, Life Orb, Expert Belt, Muscle Band, Wise Glasses, Scope Lens, Razor Claw, Razor Fang, Wide Lens, Zoom Lens, Metronome, Silk Scarf, Charcoal, Mystic Water, Magnet, Miracle Seed, Never-Melt Ice, Black Belt, Poison Barb, Soft Sand, Sharp Beak, Twisted Spoon, Silver Powder, Hard Stone, Spell Tag, Dragon Fang, Black Glasses, Metal Coat, Fairy Feather, Pixie Plate, Light Ball, Thick Club, Stick (Leek), Lucky Punch, Metal Powder, Quick Powder, Quick Claw, Bright Powder, Lagging Tail, Iron Ball, Toxic Orb, Flame Orb, Air Balloon, White Herb, Power Herb, Light Clay.
+Simulated: Leftovers, Black Sludge, Shell Bell, Focus Sash, Focus Band, Eviolite, Assault Vest, Rocky Helmet, Sitrus Berry, Oran Berry, Lum Berry, Figy Berry, Wiki Berry, Mago Berry, Aguav Berry, Iapapa Berry, Liechi Berry, Ganlon Berry, Salac Berry, Petaya Berry, Apicot Berry, Starf Berry, Occa Berry, Passho Berry, Wacan Berry, Rindo Berry, Yache Berry, Chople Berry, Kebia Berry, Shuca Berry, Coba Berry, Payapa Berry, Tanga Berry, Charti Berry, Kasib Berry, Haban Berry, Colbur Berry, Babiri Berry, Chilan Berry, Roseli Berry, Choice Band, Choice Specs, Choice Scarf, Life Orb, Expert Belt, Muscle Band, Wise Glasses, Scope Lens, Razor Claw, King's Rock, Razor Fang, Wide Lens, Zoom Lens, Metronome, Silk Scarf, Charcoal, Mystic Water, Magnet, Miracle Seed, Never-Melt Ice, Black Belt, Poison Barb, Soft Sand, Sharp Beak, Twisted Spoon, Silver Powder, Hard Stone, Spell Tag, Dragon Fang, Black Glasses, Metal Coat, Fairy Feather, Pixie Plate, Light Ball, Thick Club, Stick (Leek), Lucky Punch, Metal Powder, Quick Powder, Quick Claw, Bright Powder, Lagging Tail, Iron Ball, Toxic Orb, Flame Orb, Air Balloon, White Herb, Power Herb, Light Clay.
 
-No effect in sim: King’s Rock, Heavy-Duty Boots, Mental Herb, Red Card, Eject Button, Everstone, Smoke Ball, Amulet Coin, Soothe Bell.
+No effect in sim: Heavy-Duty Boots, Mental Herb, Red Card, Eject Button, Everstone, Smoke Ball, Amulet Coin, Soothe Bell.
 
 ## Rules notes
 - Modern (Gen 5+) damage formula; rounding follows the cartridge (random roll floors, every later modifier rounds half down). Modifiers use 4096-based fixed point (Life Orb 5324/4096, 1.2x items 4915/4096, 1.1x items 4505/4096).

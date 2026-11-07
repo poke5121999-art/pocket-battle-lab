@@ -84,6 +84,6 @@ dump("types.json", {"types": types, "chart": chart})
 
 items = []
 for r in rows("items/held-items.csv"):
-    items.append({"name": r["item"], "effect": r["effect"], "group": r["group"]})
+    items.append({"name": r["item"].replace("\u2019", "'"), "effect": r["effect"], "group": r["group"]})
 dump("items.json", items)
 print("species", len(species), "moves", len(moves), "learnsets", len(ls), "items", len(items), "abilities", len(abilities))
