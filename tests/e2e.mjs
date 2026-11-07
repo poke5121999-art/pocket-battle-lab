@@ -82,7 +82,7 @@ for (let i = 0; i < 80 && !sawFx; i++) {
   sawFx = await page.evaluate(() => window.__pbl.vfx.actors.length > 0);
   if (sawFx) {
     // wait until the effect is past its first frames so the screenshot shows the effect itself
-    await page.waitForFunction(() => { const f = window.__pbl.vfx.lastFrame; return f && f.t > 110; }, null, { timeout: 3000 }).catch(() => {});
+    await page.waitForFunction(() => { const f = window.__pbl.vfx.lastFrame; return f && f.t > 30; }, null, { timeout: 3000 }).catch(() => {});
     await shot("04-battle-vfx");
   }
 }
