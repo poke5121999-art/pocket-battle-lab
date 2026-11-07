@@ -100,7 +100,7 @@ export function getSpec(m) {
     s.status = { "Puts the target to sleep": "slp", "Paralyzes the target": "par", "Poisons the target": "psn", "Badly poisons the target": "tox", "Confuses the target": "conf" }[r[1]];
     hit();
   }
-  if ((r = /^(Has a chance to )?[Ll]owers the target's ([a-zA-Z ]+?) by (one|two) stages?/.exec(t))) {
+  if ((r = /^(?:(Has a chance to) lower|Lowers) the target's ([a-zA-Z ]+?) by (one|two) stages?/.exec(t))) {
     const st = STAT_WORDS[r[2].toLowerCase()];
     if (st) {
       if (r[1]) s.secStat = { st, d: -num(r[3]), p: chance || 10 };
@@ -116,8 +116,8 @@ export function getSpec(m) {
   if (/^Raises user's Defense by one stage/.test(t)) { s.selfStat = [{ st: "def", d: 1 }]; hit(); }
   if (/Drains half the damage/.test(t)) { s.drain = 0.5; hit(); }
   if (/Only works on sleeping/.test(t)) s.needSleep = true;
-  if (/receives 1\/4 the damage inflicted in recoil/.test(t)) { s.recoil = 1 / 4; hit(); }
-  if (/receives 1\/3 the damage inflicted in recoil/.test(t)) { s.recoil = 1 / 3; hit(); }
+  if (/receives 1\/4 the damage (?:it )?inflict(?:s|ed)? in recoil/.test(t)) { s.recoil = 1 / 4; hit(); }
+  if (/receives 1\/3 the damage (?:it )?inflict(?:s|ed)? in recoil/.test(t)) { s.recoil = 1 / 3; hit(); }
   if (/If the user misses, it takes half/.test(t)) { s.crash = true; hit(); }
   if (/foregoes its next turn to recharge/.test(t)) { s.recharge = true; hit(); }
   if (/charges? for (one|a) turn|Requires a turn to charge/.test(t)) {
@@ -419,8 +419,10 @@ export class Battle {
         if (m.power === 0 && !spec.fixed && !spec.counter && !spec.ohko) score = 5;
       } else {
         score = 2;
-        if ((spec.status === "slp" || spec.status === "par" || spec.status === "psn" || spec.status === "tox") && !t.status) score = 28;
-        if (spec.status === "conf" && !t.confused) score = 14;
+        if (spec.status === "slp" && !t.status) score = 40;
+        else if (spec.status === "par" && !t.status) score = this.speedOf(t) > this.speedOf(u) ? 30 : 16;
+        else if ((spec.status === "psn" || spec.status === "tox") && !t.status) score = 12;
+        else if (spec.status === "conf" && !t.confused) score = 10;
         if ((spec.heal || spec.rest) && u.hp < u.maxHp * 0.5) score = 45;
         if (spec.selfStat && spec.selfStat.every((x) => u.stages[x.st] < 2)) score = 16;
         if (spec.leechSeed && !t.seeded) score = 20;
@@ -464,6 +466,11 @@ export class Battle {
       return this.cmp(a.s, b.s);
     });
     this.first = plan[0].s;
+    {
+      const [p0, p1] = plan;
+      const why = p0.prio !== p1.prio ? `ưu tiên ${p0.prio} so với ${p1.prio}` : `tốc độ ${this.speedOf(this.m[p0.s])} so với ${this.speedOf(this.m[p1.s])}`;
+      this.emit({ k: "order", msg: `Thứ tự: ${this.m[p0.s].label} ra đòn trước (${why})` });
+    }
     for (const s of ["A", "B"]) this.m[s].moved = false;
     for (let i = 0; i < plan.length && !this.over; i++) {
       const p = plan[i];

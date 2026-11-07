@@ -59,12 +59,15 @@ for r in rows("battle/moves.csv"):
 dump("moves.json", moves)
 
 # learnset: only the modern version groups, union by species -> list of move ids
+valid = {m["id"] for m in moves}
 ls = {}
 mid = {m["name"]: m["id"] for m in moves}
 for r in rows("battle/learnsets.csv"):
     if r["version_group"] not in ("brilliant-diamond-shining-pearl", "lets-go-pikachu-lets-go-eevee", "red-blue", "yellow"):
         continue
     m = int(r["move_id"])
+    if m not in valid:
+        continue  # learnsets list modern moves outside the 165-move dataset
     ls.setdefault(int(r["dex"]), set()).add(m)
 dump("learnsets.json", {str(k): sorted(v) for k, v in ls.items()})
 

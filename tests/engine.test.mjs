@@ -97,5 +97,56 @@ eq("rng uniform-ish: mean of 10000 draws in (0.48,0.52)", (() => { const r = mak
   const rg = damageRange(data, b.m.A, b.m.B, m, "A");
   eq("damageRange has min<=max and pct", rg && rg.min <= rg.max && rg.pctMax > 0, true);
 }
+
+// ---- mechanics checks (each asserts a literal outcome that does not depend on luck)
+const B = (a, b, seed = "t") => new Battle(data, a, b, seed);
+const mkb = (id, o = {}) => ({ ...defaultBuild(data, id, 50), ...o });
+const idOf = (n) => mv(n).id;
+{
+  const b = B(mkb(25, { moves: [idOf("Thunderbolt")] }), mkb(130, { ability: "Intimidate", moves: [idOf("Bite")] }));
+  eq("Intimidate: Pikachu starts at Atk -1 vs Gyarados", b.m.A.stages.atk, -1);
+}
+{
+  // Quick Attack (+1) beats a faster mon's normal move
+  const b = B(mkb(143, { moves: [idOf("Quick Attack")] }), mkb(25, { moves: [idOf("Thunder Shock")] }));
+  const ev = b.step(0, 0);
+  eq("priority: Snorlax Quick Attack moves before faster Pikachu", ev.find((e) => e.k === "move").side, "A");
+}
+{
+  const b = B(mkb(25, { moves: [idOf("Thunderbolt")] }), mkb(95, { moves: [idOf("Tackle")] }));
+  const ev = b.step(0, 0);
+  eq("Electric vs Rock/Ground (Onix) = no effect, 0 damage", [b.m.B.hp === b.m.B.maxHp, ev.some((e) => e.eff === 0)], [true, true]);
+}
+{
+  const b = B(mkb(25, { moves: [idOf("Thunder Wave")] }), mkb(143, { moves: [idOf("Tackle")] }));
+  b.m.B.status = "par";
+  eq("paralysis halves speed (Snorlax base 30, Lv50 IV31, no EV: floor(91*50/100)+5 = 50 -> 25)", [b.speedOf({ ...b.m.B, status: null }), b.speedOf(b.m.B)], [50, 25]);
+}
+{
+  const b = B(mkb(1, { item: "Choice Scarf", moves: [idOf("Tackle"), idOf("Growl")] }), mkb(143, { moves: [idOf("Tackle")] }));
+  const base = b.speedOf({ ...b.m.A, item: null });
+  eq("Choice Scarf x1.5 speed", b.speedOf(b.m.A), Math.floor(base * 1.5));
+  b.step(0, 0);
+  eq("Choice lock: after Tackle only slot 0 is usable", b.usable(b.m.A).map((x) => x.i), [0]);
+}
+{
+  const b = B(mkb(25, { moves: [idOf("Thunderbolt")] }), mkb(143, { item: "Focus Sash", moves: [idOf("Tackle")] }));
+  b.m.A.stats[3] = 3000;
+  b.step(0, 0);
+  eq("Focus Sash: survives at 1 HP from full HP and the sash is gone", [b.m.B.hp, b.m.B.itemLost], [1, true]);
+}
+{
+  const b = B(mkb(143, { item: "Leftovers", moves: [idOf("Splash") ?? idOf("Teleport")] }), mkb(25, { moves: [idOf("Teleport")] }));
+  b.m.A.hp = 100;
+  b.step(0, 0);
+  eq("Leftovers heals floor(maxHp/16) at end of turn", b.m.A.hp, 100 + Math.floor(b.m.A.maxHp / 16));
+}
+{
+  const b = B(mkb(25, { moves: [idOf("Teleport")] }), mkb(25, { moves: [idOf("Teleport")] }));
+  b.m.A.status = "tox"; b.m.A.toxN = 1; b.m.B.status = "brn";
+  b.step(0, 0);
+  const a1 = b.m.A.maxHp - b.m.A.hp, b1 = b.m.B.maxHp - b.m.B.hp;
+  eq("toxic turn 1 = 1/16, burn = 1/16 of max HP (Pikachu Lv50 HP 110: 6 and 6)", [a1, b1], [6, 6]);
+}
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
